@@ -3,14 +3,18 @@ import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 export interface IPost extends Document {
   title: string;
   content: string;
+  category: string;
+  status: 'Draft' | 'Published';
   author: Types.ObjectId;
 }
 
 const postSchema = new Schema<IPost>(
   {
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    title:    { type: String, required: true },
+    content:  { type: String, required: true },
+    category: { type: String, default: 'Announcement' },
+    status:   { type: String, enum: ['Draft', 'Published'], default: 'Draft' },
+    author:   { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   { timestamps: true }
 );

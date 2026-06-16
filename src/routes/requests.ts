@@ -9,9 +9,9 @@ import {
 
 const router = Router();
 
-router.post('/', protect, createRequest);
-router.get('/my', protect, getMyRequests);
-router.get('/all', protect, authorize('Admin'), getAllRequests);
-router.put('/:id', protect, authorize('Admin'), updateRequestStatus);
+router.post('/',     protect, createRequest);
+router.get('/my',    protect, getMyRequests);
+router.get('/all',   protect, authorize('Manager', 'Admin'), getAllRequests);
+router.put('/:id',   protect, authorize('Manager', 'Admin'), updateRequestStatus);
 
 export default router;

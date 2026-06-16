@@ -8,6 +8,9 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
+  department?: string;
+  status: 'Active' | 'Inactive' | 'Suspended';
+  avatar?: string;
   matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -21,6 +24,13 @@ const userSchema = new Schema<IUser>(
       enum: ['User', 'Manager', 'Admin'] as UserRole[],
       default: 'User',
     },
+    department: { type: String, default: '' },
+    status: {
+      type: String,
+      enum: ['Active', 'Inactive', 'Suspended'],
+      default: 'Active',
+    },
+    avatar: { type: String, default: '' },
   },
   { timestamps: true }
 );
