@@ -45,6 +45,10 @@ export const login = async ({ email, password }: LoginInput) => {
   const user = await User.findOne({ email });
   if (!user) throw createError('Invalid email or password', 401);
 
+  if (user.status === 'Suspended') {
+    throw createError('Your account has been suspended. Contact an administrator.', 403);
+  }
+
   const isMatch = await user.matchPassword(password);
   if (!isMatch) throw createError('Invalid email or password', 401);
 
@@ -60,5 +64,6 @@ export const login = async ({ email, password }: LoginInput) => {
 export const getMe = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId).select('-password');
   if (!user) throw createError('User not found', 404);
+  if (user.status === 'Suspended') throw createError('Account suspended', 403);
   return user;
 };
