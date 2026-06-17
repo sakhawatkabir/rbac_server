@@ -37,6 +37,7 @@ export const signup = async ({ name, email, password }: SignupInput) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    avatar: user.avatar,
     token: generateToken(user._id as Types.ObjectId),
   };
 };
@@ -57,6 +58,7 @@ export const login = async ({ email, password }: LoginInput) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    avatar: user.avatar,
     token: generateToken(user._id as Types.ObjectId),
   };
 };
