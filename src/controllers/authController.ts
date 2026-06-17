@@ -40,3 +40,13 @@ export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
     res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
+
+export const updateProfile = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const user = await authService.updateProfile(req.user!._id as Types.ObjectId, req.body);
+    res.json(user);
+  } catch (error) {
+    const err = error as AppError;
+    res.status(err.statusCode || 500).json({ message: err.message });
+  }
+};

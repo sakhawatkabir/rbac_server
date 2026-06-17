@@ -67,3 +67,42 @@ export const getMe = async (userId: Types.ObjectId) => {
   if (user.status === 'Suspended') throw createError('Account suspended', 403);
   return user;
 };
+
+interface UpdateProfileInput {
+  name?: string;
+  email?: string;
+  department?: string;
+  avatar?: string;
+  currentPassword?: string;
+  newPassword?: string;
+}
+
+export const updateProfile = async (userId: Types.ObjectId, input: UpdateProfileInput) => {
+  const user = await User.findById(userId);
+  if (!user) throw createError('User not found', 404);
+
+  // If changing password, verify current password first
+  if (input.newPassword) {
+    if (!input.currentPassword) throw createError('Current password is required', 400);
+    const isMatch = await user.matchPassword(input.currentPassword);
+    if (!isMatch) throw createError('Current password is incorrect', 401);
+    user.password = input.newPassword;
+  }
+
+  if (input.name !== undefined) user.name = input.name;
+  if (input.email !== undefined) user.email = input.email;
+  if (input.department !== undefined) user.department = input.department;
+  if (input.avatar !== undefined) user.avatar = input.avatar;
+
+  await user.save();
+
+  return {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    department: user.department,
+    avatar: user.avatar,
+    status: user.status,
+  };
+};
