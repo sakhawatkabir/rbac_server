@@ -38,6 +38,7 @@ export const createPost = async (req: AuthRequest, res: Response): Promise<void>
       content:  req.body.content,
       category: req.body.category || 'Announcement',
       status:   req.body.status   || 'Draft',
+      image:    req.body.image    || '',
       authorId: req.user!._id as Types.ObjectId,
     });
     res.status(201).json(post);

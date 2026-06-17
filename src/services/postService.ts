@@ -16,6 +16,7 @@ interface CreatePostInput {
   content: string;
   category: string;
   status: 'Draft' | 'Published';
+  image?: string;
   authorId: Types.ObjectId;
 }
 
@@ -24,6 +25,7 @@ interface UpdatePostInput {
   content?: string;
   category?: string;
   status?: 'Draft' | 'Published';
+  image?: string;
 }
 
 export const getAllPosts = async () => {
@@ -36,9 +38,9 @@ export const getPostById = async (id: string) => {
   return post;
 };
 
-export const createPost = async ({ title, content, category, status, authorId }: CreatePostInput) => {
+export const createPost = async ({ title, content, category, status, image, authorId }: CreatePostInput) => {
   if (!title || !content) throw createError('Title and content are required', 400);
-  const post = await Post.create({ title, content, category, status, author: authorId });
+  const post = await Post.create({ title, content, category, status, image, author: authorId });
   return post.populate('author', 'name email');
 };
 

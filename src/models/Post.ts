@@ -5,6 +5,7 @@ export interface IPost extends Document {
   content: string;
   category: string;
   status: 'Draft' | 'Published';
+  image?: string;
   author: Types.ObjectId;
 }
 
@@ -14,6 +15,7 @@ const postSchema = new Schema<IPost>(
     content:  { type: String, required: true },
     category: { type: String, default: 'Announcement' },
     status:   { type: String, enum: ['Draft', 'Published'], default: 'Draft' },
+    image:    { type: String, default: '' },
     author:   { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   { timestamps: true }
