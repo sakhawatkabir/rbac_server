@@ -1,9 +1,11 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User';
-import { Types } from 'mongoose';
+import jwt from "jsonwebtoken";
+import User from "../models/User";
+import { Types } from "mongoose";
 
 const generateToken = (id: Types.ObjectId): string => {
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '30d' });
+  return jwt.sign({ id }, process.env.JWT_SECRET as string, {
+    expiresIn: "30d",
+  });
 };
 
 interface AppError extends Error {
@@ -29,7 +31,7 @@ interface LoginInput {
 
 export const signup = async ({ name, email, password }: SignupInput) => {
   const existing = await User.findOne({ email });
-  if (existing) throw createError('User already exists', 400);
+  if (existing) throw createError("User already exists", 400);
 
   const user = await User.create({ name, email, password });
   return {
@@ -44,14 +46,17 @@ export const signup = async ({ name, email, password }: SignupInput) => {
 
 export const login = async ({ email, password }: LoginInput) => {
   const user = await User.findOne({ email });
-  if (!user) throw createError('Invalid email or password', 401);
+  if (!user) throw createError("Invalid email or password", 401);
 
-  if (user.status === 'Suspended') {
-    throw createError('Your account has been suspended. Contact an administrator.', 403);
+  if (user.status === "Suspended") {
+    throw createError(
+      "Your account has been suspended. Contact an administrator.",
+      403,
+    );
   }
 
   const isMatch = await user.matchPassword(password);
-  if (!isMatch) throw createError('Invalid email or password', 401);
+  if (!isMatch) throw createError("Invalid email or password", 401);
 
   return {
     _id: user._id,
@@ -64,9 +69,9 @@ export const login = async ({ email, password }: LoginInput) => {
 };
 
 export const getMe = async (userId: Types.ObjectId) => {
-  const user = await User.findById(userId).select('-password');
-  if (!user) throw createError('User not found', 404);
-  if (user.status === 'Suspended') throw createError('Account suspended', 403);
+  const user = await User.findById(userId).select("-password");
+  if (!user) throw createError("User not found", 404);
+  if (user.status === "Suspended") throw createError("Account suspended", 403);
   return user;
 };
 
@@ -79,15 +84,19 @@ interface UpdateProfileInput {
   newPassword?: string;
 }
 
-export const updateProfile = async (userId: Types.ObjectId, input: UpdateProfileInput) => {
+export const updateProfile = async (
+  userId: Types.ObjectId,
+  input: UpdateProfileInput,
+) => {
   const user = await User.findById(userId);
-  if (!user) throw createError('User not found', 404);
+  if (!user) throw createError("User not found", 404);
 
   // If changing password, verify current password first
   if (input.newPassword) {
-    if (!input.currentPassword) throw createError('Current password is required', 400);
+    if (!input.currentPassword)
+      throw createError("Current password is required", 400);
     const isMatch = await user.matchPassword(input.currentPassword);
-    if (!isMatch) throw createError('Current password is incorrect', 401);
+    if (!isMatch) throw createError("Current password is incorrect", 401);
     user.password = input.newPassword;
   }
 

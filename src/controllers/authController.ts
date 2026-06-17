@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import * as authService from '../services/authService';
-import { Types } from 'mongoose';
-import { IUser } from '../models/User';
+import { Request, Response } from "express";
+import * as authService from "../services/authService";
+import { Types } from "mongoose";
+import { IUser } from "../models/User";
 
 interface AppError extends Error {
   statusCode?: number;
@@ -41,9 +41,15 @@ export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
-export const updateProfile = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateProfile = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
   try {
-    const user = await authService.updateProfile(req.user!._id as Types.ObjectId, req.body);
+    const user = await authService.updateProfile(
+      req.user!._id as Types.ObjectId,
+      req.body,
+    );
     res.json(user);
   } catch (error) {
     const err = error as AppError;

@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import * as userService from '../services/userService';
-import { UserRole } from '../models/User';
+import { Request, Response } from "express";
+import * as userService from "../services/userService";
+import { UserRole } from "../models/User";
 
 interface AppError extends Error {
   statusCode?: number;
@@ -9,7 +9,10 @@ interface AppError extends Error {
 const paramId = (req: Request): string =>
   Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
-export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+export const getAllUsers = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const users = await userService.getAllUsers();
     res.json(users);
@@ -18,7 +21,10 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-export const getUserById = async (req: Request, res: Response): Promise<void> => {
+export const getUserById = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const user = await userService.getUserById(paramId(req));
     res.json(user);
@@ -28,9 +34,15 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-export const updateUserRole = async (req: Request, res: Response): Promise<void> => {
+export const updateUserRole = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
-    const user = await userService.updateUserRole(paramId(req), req.body.role as UserRole);
+    const user = await userService.updateUserRole(
+      paramId(req),
+      req.body.role as UserRole,
+    );
     res.json(user);
   } catch (error) {
     const err = error as AppError;
@@ -38,9 +50,15 @@ export const updateUserRole = async (req: Request, res: Response): Promise<void>
   }
 };
 
-export const updateUserStatus = async (req: Request, res: Response): Promise<void> => {
+export const updateUserStatus = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
-    const user = await userService.updateUserStatus(paramId(req), req.body.status);
+    const user = await userService.updateUserStatus(
+      paramId(req),
+      req.body.status,
+    );
     res.json(user);
   } catch (error) {
     const err = error as AppError;
@@ -48,7 +66,10 @@ export const updateUserStatus = async (req: Request, res: Response): Promise<voi
   }
 };
 
-export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const result = await userService.deleteUser(paramId(req));
     res.json(result);
