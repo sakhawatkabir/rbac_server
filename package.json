@@ -5,8 +5,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon --exec ts-node src/server.ts",
-    "seed": "ts-node src/seed.ts",
-    "vercel-build": "echo done"
+    "seed": "ts-node src/seed.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -26,7 +25,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.9.3",
-    "@vercel/node": "^5.8.17",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "tsup": "^8.5.1",

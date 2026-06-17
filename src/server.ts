@@ -13,16 +13,8 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
-  : true;
+app.use(cors({ origin: "*", credentials: true }));
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  }),
-);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
@@ -34,11 +26,8 @@ app.use("/api/categories", categoryRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-// listen when not running on Vercel
-if (!process.env.VERCEL) {
-  connectDB().then(() => {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  });
-}
+connectDB().then(() => {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
 
 export default app;
