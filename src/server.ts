@@ -7,6 +7,7 @@ import postRoutes from './routes/posts';
 import requestRoutes from './routes/requests';
 import userRoutes from './routes/users';
 import uploadRoutes from './routes/upload';
+import categoryRoutes from './routes/categories';
 
 dotenv.config();
 connectDB();
@@ -21,6 +22,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/categories', categoryRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

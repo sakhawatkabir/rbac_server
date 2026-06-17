@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as postService from "../services/postService";
+import * as categoryService from "../services/categoryService";
 import { Types } from "mongoose";
 import { IUser } from "../models/User";
 
@@ -11,79 +11,66 @@ interface AuthRequest extends Request {
   user?: IUser;
 }
 
-export const getAllPosts = async (
-  req: Request,
+export const getAllCategories = async (
+  req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
-    const authorId = typeof req.query.author === "string" ? req.query.author : undefined;
-    const posts = await postService.getAllPosts(authorId);
-    res.json(posts);
+    const createdBy =
+      req.user?.role === "Admin"
+        ? undefined
+        : req.user!._id.toString();
+    const categories = await categoryService.getAllCategories(createdBy);
+    res.json(categories);
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
 };
 
-export const getPostById = async (
-  req: Request,
+export const createCategory = async (
+  req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
-    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    const post = await postService.getPostById(id);
-    res.json(post);
+    const category = await categoryService.createCategory(
+      req.body.name,
+      req.body.color || "#6366f1",
+      req.user!._id as Types.ObjectId,
+    );
+    res.status(201).json(category);
   } catch (error) {
     const err = error as AppError;
     res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
-export const createPost = async (
-  req: AuthRequest,
-  res: Response,
-): Promise<void> => {
-  try {
-    const post = await postService.createPost({
-      title: req.body.title,
-      content: req.body.content,
-      category: req.body.category || "Announcement",
-      status: req.body.status || "Draft",
-      image: req.body.image || "",
-      authorId: req.user!._id as Types.ObjectId,
-    });
-    res.status(201).json(post);
-  } catch (error) {
-    const err = error as AppError;
-    res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
-
-export const updatePost = async (
+export const updateCategory = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    const post = await postService.updatePost(
+    const category = await categoryService.updateCategory(
       id,
-      req.body,
+      req.body.name,
+      req.body.color,
       req.user!._id.toString(),
       req.user!.role,
     );
-    res.json(post);
+    res.json(category);
   } catch (error) {
     const err = error as AppError;
     res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
-export const deletePost = async (
+export const deleteCategory = async (
   req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    const result = await postService.deletePost(
+    const result = await categoryService.deleteCategory(
       id,
       req.user!._id.toString(),
       req.user!.role,
