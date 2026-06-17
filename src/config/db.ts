@@ -1,12 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const connectDB = async (): Promise<void> => {
+let cached: typeof mongoose | null = null;
+
+const connectDB = async (): Promise<typeof mongoose> => {
+  if (cached) return cached;
+
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI as string);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+    cached = mongoose;
+    return cached;
   } catch (error) {
-    console.error(`Error: ${(error as Error).message}`);
-    process.exit(1);
+    console.error(`MongoDB error: ${(error as Error).message}`);
+    throw error;
   }
 };
 
