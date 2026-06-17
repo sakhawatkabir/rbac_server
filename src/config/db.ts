@@ -6,7 +6,10 @@ const connectDB = async (): Promise<typeof mongoose> => {
   if (cached) return cached;
 
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI as string);
+    const uri = process.env.MONGO_URI as string;
+    const conn = await mongoose.connect(uri, {
+      tlsAllowInvalidCertificates: true,
+    });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     cached = mongoose;
     return cached;
